@@ -9,14 +9,14 @@ import axios from "axios";
 // };
 
 const login = async (username, password) => {
-    const response = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/login`, {username, password}, {
+    const response = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/auth/login`, {username, password}, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     if (response.data) {
-        localStorage.setItem("token", JSON.stringify(response.data.token));
+      localStorage.setItem("token", JSON.stringify(response.data.token));
     }
     return response;
 };
