@@ -1,10 +1,10 @@
 import axios from "axios";
 import { API_URL } from "../helpers/globalVars";
 import LoginService from "./login.service";
-const {login_token} = LoginService.getCurrentUser();
+const {token} = LoginService.getCurrentUser();
 const getIngresosEgresos = (cedula,fecha_inicio,fecha_fin) => {
     return axios
-    .get(API_URL + 'ingresosegresos/ingresos_egresos',{params: {cedula,fecha_inicio,fecha_fin},headers: {'token': login_token}})
+    .get(API_URL + 'ingresosegresos/ingresos_egresos',{params: {cedula,fecha_inicio,fecha_fin},headers: {'token': token}})
     .then((response) => {
         if (response.data.data) {
             return response.data.data;
@@ -20,7 +20,7 @@ const regIngresoEgreso = ({cedula,fecha_ingreso,hora_ingreso,fecha_egreso,hora_e
     formData.append('fecha_ingreso', fecha_ingreso+' '+hora_ingreso);
     formData.append('fecha_egreso', fecha_egreso+' '+hora_egreso);
     return axios
-    .post(API_URL + 'ingresosegresos/ingresos_egresos',formData,{headers: {'token': login_token}})
+    .post(API_URL + 'ingresosegresos/ingresos_egresos',formData,{headers: {'token': token}})
     .then((response) => {
         if (response.data.data) {
             return response.data.data;
@@ -35,7 +35,7 @@ const updateIngresoEgreso = ({ingreso_egreso_id,fecha_ingreso,hora_ingreso,fecha
         fecha_egreso: fecha_egreso+' '+hora_egreso
     }
     return axios
-    .put(API_URL + 'ingresosegresos/ingresos_egresos/'+ingreso_egreso_id, newDataIngEg, {headers: {'token': login_token}})
+    .put(API_URL + 'ingresosegresos/ingresos_egresos/'+ingreso_egreso_id, newDataIngEg, {headers: {'token': token}})
     .then((response) => {
         if (response.data.data) {
             return response.data.data;
@@ -46,7 +46,7 @@ const updateIngresoEgreso = ({ingreso_egreso_id,fecha_ingreso,hora_ingreso,fecha
 
 const getIngresoEgresoEmpl = (cedula) => {
     return axios
-    .get(API_URL + 'ingresosegresos/ingresos_egresos_empleado',{params: {cedula},headers: {'token': login_token}})
+    .get(API_URL + 'ingresosegresos/ingresos_egresos_empleado',{params: {cedula},headers: {'token': token}})
     .then((response) => {
         return response.data;
     });

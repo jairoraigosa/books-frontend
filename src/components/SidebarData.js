@@ -5,15 +5,9 @@ import * as FaIcons from 'react-icons/fa';
 
 export const SideBarData = [
     {
-        title: 'Ingresos y egresos',
+        title: 'Mis libros',
         path: '/home',
         icon: <FaIcons.FaDoorOpen/>,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Empleados',
-        path: '/empleados',
-        icon: <FaIcons.FaMale/>,
         cName: 'nav-text'
     }
 ]

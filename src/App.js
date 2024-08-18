@@ -9,31 +9,37 @@ import Navbar from "./components/Navbar";
 import Home from "./screens/Home";
 import { Page } from "./screens/Page";
 import './assets/css/estilos.css'
-
+import { useSelector } from 'react-redux';
+import { logoutUser, setToken } from "./redux/actions/userActions";
+import { useDispatch } from 'react-redux';
 
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const token = useSelector((state) => state.user.token);
   const navigate = useNavigate();
-  const {login_token} = LoginService.getCurrentUser();
-  useEffect(() => {
-    const user = LoginService.getCurrentUser();
+  const dispatch = useDispatch();
 
-    if (user) {
-      setCurrentUser(user);
+  useEffect(() => {
+    const getToken = async () => {
+      const tokenStorage = await LoginService.getCurrentUser();
+      if(tokenStorage){
+        dispatch(setToken(tokenStorage));
+      }
     }
-  }, []);
+    getToken();
+  }, [dispatch])
+  
 
   const logOut = () => {
     LoginService.logout();
-    setCurrentUser(null);
+    dispatch(logoutUser());
     navigate("/login");
   };
 
   return (
     <div style={{minHeight: 500}}>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        {login_token 
+        {token 
           ? <Navbar/>
           : <Link to={"/"} className="navbar-brand">
             Bienvenido a la plataforma donde podrás tener un historial de los libros leidos y por leer
@@ -41,7 +47,7 @@ function App() {
         }
         <div className="navbar-nav w100 right">
           <li className="nav-item">
-            {currentUser && (
+            {token && (
               <button
                 className="btn btn-link"
                 onClick={logOut}
