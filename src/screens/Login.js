@@ -1,11 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-import AuthService from "../services/login.service";
 import logo from "../assets/images/leyendo-libros.jpeg";
 import LoginService from "../services/login.service";
-import Profile from "./Home";
+import Home from "./Home";
+import { useDispatch } from 'react-redux';
+import { setToken } from "../redux/actions/userActions";
+import { useSelector } from 'react-redux';
 
 const required = (value) => {
     if (!value) {
@@ -19,15 +21,17 @@ const required = (value) => {
 
 
 const Login = () => {
+  const token = useSelector((state) => state.user.token);
   const form = useRef();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUser = AuthService.getCurrentUser();
+  
   const onChangeUsername = (e) => {
     const username = e.target.value;
     setUsername(username);
@@ -37,55 +41,48 @@ const Login = () => {
     const password = e.target.value;
     setPassword(password);
   };
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
     setMessage("");
     setLoading(true);
 
     form.current.validateAll();
 
-    
-    if(username.length<5){
-        setMessage('El nombre de usuario debe de contener al menos 5 caracteres.');
+    if(username.length<3){
+        setMessage('El nombre de usuario debe de contener al menos 3 caracteres.');
         setLoading(false);
     }else {
-      LoginService.login(username, password).then(
-        ({data}) => {
-            if(data.status){
-                navigate("/home");
-                window.location.reload();
+        try {
+            const response = await LoginService.login(username, password);
+            const data = response.data;
+            if(data.trans){
+                dispatch(setToken(data.token));
             }else{
                 setMessage('Usuario y/o contraseña incorrecta.');
                 setLoading(false);
             }
-        //   window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+        } catch (error) {
+            const resMessage =
+                (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+                error.message ||
+                error.toString();
 
-          setLoading(false);
-          setMessage(resMessage);
+            setLoading(false);
+            setMessage(resMessage);
         }
-      );
     }
   };
-
   return (
-      (!currentUser) ? (
+    (!token) ? ( 
         <div className="row" style={{ paddingBottom: 100 }}>
             <div className="col-md-3"></div>
             <div className="col-md-6">
                 <div className="text-center">
                     <img 
                         src={logo}
-                        alt="Plataforma ENDE"
+                        alt="Plataforma Books"
                         className="profile-img-card"
                         style={{width: '50%'}}
                     />
@@ -93,15 +90,15 @@ const Login = () => {
                 <div className="card border" style={{borderRadius: 10}}>
                     <div className="card-header">
                         <h4>
-                            CONTROL DE ASISTENCIA
+                            INICIAR SESIÓN
                         </h4>
                     </div>
                     <div className="card-body">
                         {message && (
                             <div className="form-group">
-                            <div className="alert alert-danger" role="alert">
-                                {message}
-                            </div>
+                                <div className="alert alert-danger" role="alert">
+                                    {message}
+                                </div>
                             </div>
                         )}
                         <Form onSubmit={handleLogin} ref={form}>
@@ -143,8 +140,7 @@ const Login = () => {
             </div>
             <div className="col-md-3"></div>
         </div>
-      ) : <Profile/>
+    ) : (<Home/>)
   );
 };
-
 export default Login;
