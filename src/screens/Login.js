@@ -59,7 +59,6 @@ const Login = () => {
                 dispatch(setToken(data.token));
             }else{
                 setMessage('Usuario y/o contraseña incorrecta.');
-                setLoading(false);
             }
         } catch (error) {
             const resMessage =
@@ -69,9 +68,9 @@ const Login = () => {
                 error.message ||
                 error.toString();
 
-            setLoading(false);
             setMessage(resMessage);
         }
+        setLoading(false);
     }
   };
   return (
