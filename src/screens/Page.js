@@ -12,7 +12,7 @@ export const Page = () => {
     <div className="col-12 text-center" style={{marginBottom: 100}}>
       {!token &&
         <div style={{padding: 50}}>
-          Si ya tienes una cuenta oprime <Link to={"/login"}>INICIAR SESIÓN</Link>, si deseas registrarte oprime <Link to={"/register"}>REGISTRARME</Link>.
+          Para iniciar sesión en el aplicativo, oprime sobre <Link to={"/login"}>INICIAR SESIÓN</Link>.
         </div>
       }
       <img 

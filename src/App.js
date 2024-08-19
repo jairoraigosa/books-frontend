@@ -3,7 +3,6 @@ import { Routes, Route, Link } from "react-router-dom";
 import LoginService from "./services/login.service";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from "./screens/Login";
-import Register from "./screens/Register";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./screens/Home";
@@ -60,7 +59,6 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Page />} />
           <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Register />} />
           <Route exact path="/home" element={<Home />} />
         </Routes>
       </div>
